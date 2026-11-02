@@ -85,6 +85,19 @@ public class VideojuegoDAO {
         return resultado;
     }
 
+    /** Desafío Actividad 4.1: recupera únicamente videojuegos con puntuación >= 4 ordenados descendentemente. */
+    public List<Videojuego> listarDestacados() {
+        List<Videojuego> resultado = new ArrayList<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        try (Cursor c = db.query(GameVaultDbHelper.TABLA, null, "puntuacion >= ?",
+                new String[]{"4"}, null, null, "puntuacion DESC, titulo COLLATE NOCASE ASC")) {
+            while (c.moveToNext()) {
+                resultado.add(desdeCursor(c));
+            }
+        }
+        return resultado;
+    }
+
     /** COUNT(*) obtiene el total de registros, independientemente del filtro. */
     public int contarTotal() {
         SQLiteDatabase db = helper.getReadableDatabase();

@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cl.iei093.gamevault.adapter.VideojuegoAdapter;
 import cl.iei093.gamevault.database.VideojuegoDAO;
+import cl.iei093.gamevault.modelo.Videojuego;
 import java.util.List;
 
 /** Pantalla principal: presenta la biblioteca y conecta filtros con consultas SQLite. */
@@ -23,6 +25,8 @@ public class MainActivity extends Activity {
     private EditText campoBusqueda;
     private Spinner filtroEstado;
     private TextView mensajeVacio, resumen;
+    private Button botonDestacados;
+    private boolean modoDestacados = false;
 
     // onCreate se ejecuta al crear la pantalla: enlaza Views, lista y eventos.
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class MainActivity extends Activity {
         filtroEstado = findViewById(R.id.filtroEstado);
         mensajeVacio = findViewById(R.id.mensajeVacio);
         resumen = findViewById(R.id.resumen);
+        botonDestacados = findViewById(R.id.botonDestacados);
+
         RecyclerView lista = findViewById(R.id.listaJuegos);
         lista.setLayoutManager(new LinearLayoutManager(this));
         // Al tocar una tarjeta, enviamos su ID mediante Intent para consultar el detalle.
@@ -43,21 +49,44 @@ public class MainActivity extends Activity {
             startActivity(intent);
         });
         lista.setAdapter(adapter);
+
         ArrayAdapter<CharSequence> estados = ArrayAdapter.createFromResource(this,
                 R.array.filtros_estado, R.layout.spinner_item);
         estados.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filtroEstado.setAdapter(estados);
+
         // Cada cambio de estado vuelve a consultar la base de datos.
         filtroEstado.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(android.widget.AdapterView<?> p, View v, int pos, long id) { cargarJuegos(); }
+            @Override public void onItemSelected(android.widget.AdapterView<?> p, View v, int pos, long id) {
+                if (!modoDestacados) cargarJuegos();
+            }
             @Override public void onNothingSelected(android.widget.AdapterView<?> p) { }
         });
+
         // TextWatcher ejecuta una búsqueda cada vez que cambia el texto.
         campoBusqueda.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { cargarJuegos(); }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!modoDestacados) cargarJuegos();
+            }
             @Override public void afterTextChanged(Editable s) { }
         });
+
+        // Botón para alternar entre vista general y vista de juegos destacados (Actividad 4.2)
+        botonDestacados.setOnClickListener(v -> {
+            modoDestacados = !modoDestacados;
+            if (modoDestacados) {
+                botonDestacados.setText("📋 Ver Todos");
+                campoBusqueda.setEnabled(false);
+                filtroEstado.setEnabled(false);
+            } else {
+                botonDestacados.setText("⭐ Destacados");
+                campoBusqueda.setEnabled(true);
+                filtroEstado.setEnabled(true);
+            }
+            cargarJuegos();
+        });
+
         findViewById(R.id.botonAgregar).setOnClickListener(v ->
                 startActivity(new Intent(this, FormularioJuegoActivity.class)));
     }
@@ -68,13 +97,25 @@ public class MainActivity extends Activity {
         if (dao != null && adapter != null && filtroEstado != null) cargarJuegos();
     }
 
-    /** Consulta según búsqueda/estado y sincroniza RecyclerView y contador. */
+    /** Consulta según búsqueda/estado o destacados y sincroniza RecyclerView y contador. */
     private void cargarJuegos() {
-        String filtro = filtroEstado.getSelectedItem() == null ? "Todos" : filtroEstado.getSelectedItem().toString();
-        List<cl.iei093.gamevault.modelo.Videojuego> juegos = dao.listar(campoBusqueda.getText().toString(), filtro);
+        List<Videojuego> juegos;
+
+        if (modoDestacados) {
+            // Consulta de destacados: puntuación >= 4
+            juegos = dao.listarDestacados();
+            mensajeVacio.setText("No hay videojuegos destacados con puntuación de 4 o 5.\nAgrega o califica uno con 4 o 5 estrellas.");
+            resumen.setText("⭐ Juegos destacados (≥ 4★) · " + juegos.size() + " encontrados");
+        } else {
+            // Consulta habitual con filtros de texto y estado
+            String filtro = filtroEstado.getSelectedItem() == null ? "Todos" : filtroEstado.getSelectedItem().toString();
+            juegos = dao.listar(campoBusqueda.getText().toString(), filtro);
+            mensajeVacio.setText("Todavía no hay videojuegos para mostrar.\nAgrega uno con el botón inferior.");
+            int total = dao.contarTotal();
+            resumen.setText(total + " juegos en tu colección · " + juegos.size() + " visibles");
+        }
+
         adapter.reemplazar(juegos);
         mensajeVacio.setVisibility(juegos.isEmpty() ? View.VISIBLE : View.GONE);
-        int total = dao.contarTotal();
-        resumen.setText(total + " juegos en tu colección · " + juegos.size() + " visibles");
     }
 }
