@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Formulario reutilizado en INSERT y UPDATE; IDs enlazados en FormularioJuegoActivity. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/bg"
+    android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="20dp">
+        <TextView android:id="@+id/tituloFormulario" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Agregar videojuego" android:textSize="25sp" android:textStyle="bold" android:textColor="@color/white"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"
+            android:text="Completa los datos para guardar en SQLite" android:textSize="14sp" android:textColor="@color/muted"/>
+        <TextView style="@style/FormLabel" android:text="Título * (2 a 100 caracteres; sin duplicados en la misma plataforma)"/>
+        <EditText android:id="@+id/campoTitulo" style="@style/FormInput" android:hint="Ej.: Hollow Knight"
+            android:inputType="textCapSentences" android:maxLength="100" android:singleLine="true"/>
+        <TextView style="@style/FormLabel" android:text="Plataforma *"/>
+        <Spinner android:id="@+id/campoPlataforma" style="@style/FormSpinner"/>
+        <TextView style="@style/FormLabel" android:text="Género *"/>
+        <Spinner android:id="@+id/campoGenero" style="@style/FormSpinner"/>
+        <TextView style="@style/FormLabel" android:text="Estado *"/>
+        <Spinner android:id="@+id/campoEstado" style="@style/FormSpinner"/>
+        <TextView style="@style/FormLabel" android:text="Puntuación (1 a 5)"/>
+        <RatingBar android:id="@+id/campoPuntuacion" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:numStars="5" android:rating="3" android:stepSize="1"/>
+        <Button android:id="@+id/botonGuardar" android:layout_width="match_parent" android:layout_height="54dp"
+            android:layout_marginTop="28dp" android:background="@drawable/button_bg" android:text="GUARDAR VIDEOJUEGO"
+            android:textColor="@color/bg" android:textStyle="bold"/>
+        <Button android:id="@+id/botonCancelar" android:layout_width="match_parent" android:layout_height="52dp"
+            android:layout_marginTop="8dp" android:text="CANCELAR" android:textColor="@color/white"
+            android:background="@drawable/panel_bg"/>
+    </LinearLayout>
+</ScrollView>

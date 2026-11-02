@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Detalle del registro y controles para editar o eliminar. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/bg" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="20dp">
+        <Button android:id="@+id/botonVolver" android:layout_width="wrap_content" android:layout_height="48dp"
+            android:text="←  VOLVER" android:background="@drawable/panel_bg" android:textColor="@color/white"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp"
+            android:text="DETALLE DEL VIDEOJUEGO" android:textColor="@color/accent" android:textSize="13sp" android:textStyle="bold"/>
+        <TextView android:id="@+id/detalleTitulo" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:textColor="@color/white" android:textSize="28sp" android:textStyle="bold"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="24dp" android:background="@drawable/panel_bg" android:orientation="vertical" android:padding="20dp">
+            <TextView android:id="@+id/detallePlataforma" style="@style/DetailItem"/>
+            <TextView android:id="@+id/detalleGenero" style="@style/DetailItem"/>
+            <TextView android:id="@+id/detalleEstado" style="@style/DetailItem"/>
+            <TextView android:id="@+id/detallePuntuacion" style="@style/DetailItem"/>
+        </LinearLayout>
+        <Button android:id="@+id/botonEditar" android:layout_width="match_parent" android:layout_height="54dp"
+            android:layout_marginTop="28dp" android:background="@drawable/button_bg" android:text="EDITAR VIDEOJUEGO"
+            android:textColor="@color/bg" android:textStyle="bold"/>
+        <Button android:id="@+id/botonEliminar" android:layout_width="match_parent" android:layout_height="54dp"
+            android:layout_marginTop="12dp" android:background="@drawable/danger_bg" android:text="ELIMINAR VIDEOJUEGO"
+            android:textColor="@color/bg" android:textStyle="bold"/>
+    </LinearLayout>
+</ScrollView>

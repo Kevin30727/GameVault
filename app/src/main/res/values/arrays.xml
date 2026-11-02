@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Opciones visibles en Spinner; mantener coherencia con ValidadorVideojuego y CHECK de SQLite. -->
+    <string-array name="plataformas"><item>PC</item><item>PlayStation</item><item>Xbox</item><item>Nintendo Switch</item><item>Móvil</item><item>Otra</item></string-array>
+    <string-array name="generos"><item>Acción</item><item>Aventura</item><item>RPG</item><item>Estrategia</item><item>Deportes</item><item>Simulación</item><item>Indie</item><item>Otro</item></string-array>
+    <string-array name="estados"><item>Pendiente</item><item>Jugando</item><item>Completado</item></string-array>
+    <string-array name="filtros_estado"><item>Todos</item><item>Pendiente</item><item>Jugando</item><item>Completado</item></string-array>
+</resources>
